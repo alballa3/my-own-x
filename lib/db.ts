@@ -23,7 +23,7 @@ export function Store(table: string, data: Record<string, any>) {
 // record is The unique data that i didnt want to make it there 
 export function StoreUnique(table: string, record: string, data: Record<string, any>) {
   const allUser = FindAll(table)
-  let array = Object.values(allUser)
+  let array = Object.values(allUser||{} )
   let check = array.find((e) => e[record] === data[record])
   if (check) {
     throw Error("The Email Exites Choose another one.")

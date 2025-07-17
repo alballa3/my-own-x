@@ -1,9 +1,9 @@
 import http from "http"
 import zod from "zod"
 import { getRequestBody, JsonParse } from "../../lib/http"
-import { Find, Store, StoreUnique } from "../../lib/db"
+import { StoreUnique } from "../../lib/db"
 import { createHash } from "crypto"
-import { createSession } from "./session"
+import { createSession, isAuth } from "./session"
 import { IUser } from "../../types/auth"
 const schama = zod.object({
     email: zod.string().email(),
@@ -12,7 +12,13 @@ const schama = zod.object({
 })
 export default async function register(req: http.IncomingMessage, res: http.ServerResponse) {
     let body = await getRequestBody(req)
-
+    let auth = isAuth(req, false)
+    if (auth) {
+        res.end(JSON.stringify({
+            error: "YOU CANT REGISTER IF YOUR authorized"
+        }))
+        return;
+    }
     let json = JsonParse(body as string)
     if (!json) {
         res.statusCode = 400;
@@ -39,7 +45,8 @@ export default async function register(req: http.IncomingMessage, res: http.Serv
             ]
         }
         let check = StoreUnique("users", "email", data)
-        res.end(JSON.stringify(data))
+        res.setHeader('Set-Cookie', `user=${data.session[0].session_id}; Path=/; HttpOnly`);
+        res.end(JSON.stringify(check))
     } catch (error) {
         res.end(JSON.stringify({ error: error.message }))
     }

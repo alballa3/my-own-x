@@ -9,3 +9,6 @@ export interface session {
     expiresAt: Date | string,
     createdAt: Date | string
 }
+export interface UserInDB extends IUser {
+    created_at: Date | String
+}
