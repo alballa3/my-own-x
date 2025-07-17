@@ -1,5 +1,15 @@
 import http from "http";
 import { route } from "./route";
+import { existsSync, readFileSync, writeFileSync } from 'fs';
+import { RecordDB } from "../types/db";
+const db_path = "./data.json"
+
+export let db: RecordDB = {};
+if (existsSync(db_path)) {
+  const data = readFileSync(db_path)
+  const json = JSON.parse(data.toLocaleString())
+  db = json
+}
 
 const server = http.createServer((req, res) => {
   const method = req.method;
@@ -7,6 +17,8 @@ const server = http.createServer((req, res) => {
   const handler = route.find((route) => {
     return route.path === url.pathname && route.method === method;
   });
+  res.setHeader("Content-Type", "application/json");
+
   if (handler) {
     handler.handler(req, res);
   } else {
@@ -16,3 +28,6 @@ const server = http.createServer((req, res) => {
 server.listen(4000, () => {
   console.log("Server is running on port localhost:4000");
 });
+setInterval(() => {
+  writeFileSync(db_path, JSON.stringify(db, null, 2));
+}, 1000);

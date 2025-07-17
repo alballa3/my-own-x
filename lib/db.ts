@@ -1,6 +1,4 @@
-import { RecordDB } from "../types/db";
-
-export const db: RecordDB = {};
+import { db } from "../server";
 
 export function generateID(table: string) {
   const data = db[table];
@@ -17,22 +15,32 @@ export function Store(table: string, data: Record<string, any>) {
   if (!db[table]) {
     db[table] = {}; // Initialize the table if not present
   }
-  db[table][generateID(table)] = {
+  return db[table][generateID(table)] = {
     ...data,
     created_at: Date.now(),
   };
 }
-export function Find(table: string, id: string) {
-  if (!table || !id) {
-    throw Error("table or id is required");
+// record is The unique data that i didnt want to make it there 
+export function StoreUnique(table: string, record: string, data: Record<string, any>) {
+  const allUser = FindAll(table)
+  let array = Object.values(allUser)
+  let check = array.find((e) => e[record] === data[record])
+  if (check) {
+    throw Error("The Email Exites Choose another one.")
   }
-  return db[table][id];
+  return Store(table, data)
 }
 export function FindAll(table: string) {
   if (!table) {
     throw Error("table is required");
   }
   return db[table];
+}
+export function Find(table: string, id: string) {
+  if (!table || !id) {
+    throw Error("table or id is required");
+  }
+  return db[table][id];
 }
 export function Update(table: string, id: string, data: Record<string, any>) {
   if (!table || !id || !data) {

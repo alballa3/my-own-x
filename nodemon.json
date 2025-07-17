@@ -1,0 +1,7 @@
+{
+    "exec": "bun",
+    "ext": "ts,js,json",
+    "watch": ["src","server","lib"],
+    "ignore": ["node_modules"]
+  }
+  

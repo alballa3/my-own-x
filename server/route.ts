@@ -1,12 +1,11 @@
 import { Route } from "../types/route";
+import register from "./auth/register";
 
 export const route: Route[] = [
   {
-    path: "/",
-    method: "GET",
-    handler: (req, res) => {
-      res.end("Hello World");
-    },
+    path: "/auth/register",
+    method: "POST",
+    handler: register,
   },
   {
     path: "/api",
