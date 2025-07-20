@@ -1,4 +1,5 @@
 import { Route } from "../types/route";
+import Login from "./auth/login";
 import register from "./auth/register";
 
 export const route: Route[] = [
@@ -8,10 +9,8 @@ export const route: Route[] = [
     handler: register,
   },
   {
-    path: "/api",
-    method: "GET",
-    handler: (req, res) => {
-      res.end("Hello APIz");
-    },
+    path: "/auth/login",
+    method: "POST",
+    handler: Login,
   },
 ];

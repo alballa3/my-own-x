@@ -12,3 +12,4 @@ export interface session {
 export interface UserInDB extends IUser {
     created_at: Date | String
 }
+export type UserCollection = Record<string, IUser>

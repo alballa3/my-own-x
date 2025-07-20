@@ -1,9 +1,30 @@
 import { IncomingMessage } from "http";
-import { session, UserInDB } from "../../types/auth";
+import { session, UserCollection, UserInDB } from "../../types/auth";
 import { FindAll } from "../../lib/db";
+import { db } from "..";
+import { createHash } from "crypto";
 
-export function sessionHandler() {
-
+export function addSession(Remember: boolean, email: string, session: session) {
+    const allUsers = FindAll("users") as unknown as UserCollection
+    for (const [id, _] of Object.entries(allUsers)) {
+        if (allUsers[id].email == email) {
+            let user = db["users"] as unknown as UserCollection
+            user[id].session.push(session)
+            return;
+        }
+    }
+    throw Error("THE USER IS NOT FOUND")
+}
+export function VaildThePass(password: string, email: string) {
+    const allUsers = FindAll("users") as unknown as UserCollection
+    for (const [id, _] of Object.entries(allUsers)) {
+        if (allUsers[id].email == email) {
+            let user = db["users"] as unknown as UserCollection
+            let HashedPass = createHash("sha256").update(password).digest("hex")
+            return HashedPass == user[id].password;
+        }
+    }
+    return false
 }
 export function createSession(Remember: boolean): session {
     const rememberTime = Remember ? 7 : 14

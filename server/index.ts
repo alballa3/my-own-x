@@ -17,8 +17,10 @@ const server = http.createServer((req, res) => {
   const handler = route.find((route) => {
     return route.path === url.pathname && route.method === method;
   });
-  res.setHeader("Content-Type", "application/json");
-
+  res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
   if (handler) {
     handler.handler(req, res);
   } else {
