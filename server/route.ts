@@ -22,7 +22,6 @@ export const route: Route[] = [
   },
   {
     path: "/auth/logout",
-    method: "GET",
+    method: "POST",
     handler: logout
-  }
-];
+  }];

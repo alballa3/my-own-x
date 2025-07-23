@@ -7,17 +7,4 @@ export async function getUserFrontEnd() {
     return json || false
 }
 
-const logout = document.getElementById("logout") as HTMLButtonElement
-console.log(logout)
-logout.addEventListener("click", () => {
-    fetch(`${import.meta.env.VITE_BACKEND}/auth/logout`, {
-        method: "GET",
-        credentials: "include"
-    }).then(() => {
-        window.location.href = "/"
-    })
-})
-getUserFrontEnd().then((e) => {
 
-    console.log(e)
-})

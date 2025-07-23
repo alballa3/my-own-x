@@ -68,11 +68,11 @@ export function getUser(req: IncomingMessage, res: ServerResponse) {
     const allUsers = Object.values(usersInDb || {}) as unknown as UserInDB[];
     // Find the user who has a session with the matching session ID
     for (const users of allUsers) {
-      const check=users.session.some((s) => s.session_id == sessionId)
+        const check = users.session.some((s) => s.session_id == sessionId)
         if (check) {
             return res.end(JSON.stringify(users));
         }
-    }
+    }``
     return res.end(JSON.stringify(null));
 }
 
@@ -86,11 +86,31 @@ export function logout(req: IncomingMessage, res: ServerResponse) {
     const allUsers = Object.values(usersInDb || {}) as unknown as UserInDB[];
     // Find the user who has a session with the matching session ID
     for (const users of allUsers) {
-        const check=users.session.some((s) => s.session_id == sessionId)
+        const check = users.session.some((s) => s.session_id == sessionId)
         if (check) {
             users.session = users.session.filter((s) => s.session_id !== sessionId);
             return res.end(JSON.stringify(users));
         }
     }
     return res.end(JSON.stringify(null));
+}
+export function GetSession(req: IncomingMessage): UserInDB | null {
+    const rawCookie = req.headers.cookie;
+
+    if (!rawCookie) {
+        return null;
+    }
+
+    const sessionId = rawCookie.split("=")[1];
+    const usersInDb = FindAll("users");
+    const allUsers = Object.values(usersInDb || {}) as unknown as UserInDB[];
+    // Find the user who has a session with the matching session ID
+    for (const users of allUsers) {
+        const check = users.session.some((s) => s.session_id == sessionId)
+        if (check) {
+            return users;
+        }
+    }
+
+    return null;
 }

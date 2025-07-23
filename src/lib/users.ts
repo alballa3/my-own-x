@@ -1,13 +1,16 @@
-interface IUser {
-    name: string,
-    email: string,
-    password: string,
-    session: session[],
-}
-interface session {
+
+interface Session {
     session_id: string,
     expiresAt: Date | string,
     createdAt: Date | string
+}
+
+interface IUser {
+    id:string,
+    name: string,
+    email: string,
+    password: string,
+    session: Session[],
 }
 interface UserInDB extends IUser {
     created_at: Date | String

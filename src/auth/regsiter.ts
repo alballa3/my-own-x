@@ -27,7 +27,9 @@ document.getElementById("form")?.addEventListener("submit", async (e) => {
         passwordError.textContent = "The password must be at least 6 characters";
         hasError = true;
     } if (hasError) return;
-
+    document.querySelectorAll("input").forEach(input => {
+        input.disabled = true
+    })
     const response = await fetch(`http://localhost:4000/auth/register`, {
         method: "POST",
         headers: {
@@ -40,7 +42,9 @@ document.getElementById("form")?.addEventListener("submit", async (e) => {
             password: password?.value
         })
     });
-
+    document.querySelectorAll("input").forEach(input => {
+        input.disabled = false
+    })
     try {
         const json = await response.json();
         console.log(json);

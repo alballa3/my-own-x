@@ -39,8 +39,11 @@ form?.addEventListener("submit", async (e) => {
 
     const json = await response.json();
     console.log(json);
-
+    document.querySelectorAll("input").forEach(input => {
+        input.disabled = false
+      })
     if (!response.ok) {
+
         passwordError.textContent = json.error || "Register Failed";
         return;
     }

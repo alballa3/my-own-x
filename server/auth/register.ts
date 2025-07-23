@@ -39,6 +39,7 @@ export default async function register(req: http.IncomingMessage, res: http.Serv
         result.data.password = createHash("sha256").update(result.data.password).digest("hex");
         let session = createSession(false)
         let data: IUser = {
+            id: session.session_id,
             name: result.data.name,
             email: result.data.email,
             password: result.data.password,
@@ -47,7 +48,7 @@ export default async function register(req: http.IncomingMessage, res: http.Serv
             ]
         }
         let check = StoreUnique("users", "email", data)
-        res.setHeader('Set-Cookie', `user=${data.session[0].session_id}; Path=/; HttpOnly`);
+        res.setHeader('Set-Cookie', `user=${data.session[0].session_id}; Path=/; HttpOnly Expires=${data.session[0].expiresAt}`);
         res.end(JSON.stringify(check))
     } catch (error) {
         res.statusCode = 500;
