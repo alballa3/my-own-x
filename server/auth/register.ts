@@ -50,7 +50,7 @@ export default async function register(req: http.IncomingMessage, res: http.Serv
         res.setHeader('Set-Cookie', `user=${data.session[0].session_id}; Path=/; HttpOnly`);
         res.end(JSON.stringify(check))
     } catch (error) {
-        res.statusCode = 400;
+        res.statusCode = 500;
         res.end(JSON.stringify({ error: error.message }))
     }
 }

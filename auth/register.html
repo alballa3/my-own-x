@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Account</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -26,84 +27,82 @@
     </script>
 </head>
 
-<body>
+<body class="bg-x-bg min-h-screen flex items-center justify-center p-4">
+    <div class="w-full max-w-md">
+        <!-- Logo/Brand Section -->
+        <div class="text-center mb-8">
+            <span class="text-white">Xero</span>
 
-    <body class="bg-x-bg min-h-screen flex items-center justify-center p-4">
-        <div class="w-full max-w-md">
-            <!-- Logo/Brand Section -->
-            <div class="text-center mb-8">
-                    <span class="text-white">Xero</span>
-                
-                <h1 class="text-3xl font-bold text-x-text mb-2">Create your account</h1>
-                <p class="text-x-text-secondary text-base">Join us today and get started</p>
-            </div>
+            <h1 class="text-3xl font-bold text-x-text mb-2">Create your account</h1>
+            <p class="text-x-text-secondary text-base">Join us today and get started</p>
+        </div>
 
-            <!-- Form Container -->
-            <div class="bg-x-card rounded-2xl border border-x-border p-8 shadow-2xl">
-                <form id="form" class="space-y-6">
-                    <!-- Name Field -->
-                    <div class="space-y-2">
-                        <label for="name" class="block text-sm font-medium text-x-text">
-                            Full Name
-                        </label>
-                        <div class="relative">
-                            <input type="text" id="name" name="name" required autocomplete="name"
-                                class="w-full px-4 py-3 bg-transparent border border-x-border rounded-lg text-x-text placeholder-x-text-secondary focus:outline-none focus:ring-2 focus:ring-x-blue focus:border-transparent transition-all duration-200"
-                                placeholder="Enter your full name" />
-                        </div>
-                        <div id="name-error" class="text-x-error text-sm min-h-[20px]"></div>
+        <!-- Form Container -->
+        <div class="bg-x-card rounded-2xl border border-x-border p-8 shadow-2xl">
+            <form id="form" class="space-y-6">
+                <!-- Name Field -->
+                <div class="space-y-2">
+                    <label for="name" class="block text-sm font-medium text-x-text">
+                        Full Name
+                    </label>
+                    <div class="relative">
+                        <input type="text" id="name" name="name" required autocomplete="name"
+                            class="w-full px-4 py-3 bg-transparent border border-x-border rounded-lg text-x-text placeholder-x-text-secondary focus:outline-none focus:ring-2 focus:ring-x-blue focus:border-transparent transition-all duration-200"
+                            placeholder="Enter your full name" />
                     </div>
-
-                    <!-- Email Field -->
-                    <div class="space-y-2">
-                        <label for="email" class="block text-sm font-medium text-x-text">
-                            Email Address
-                        </label>
-                        <div class="relative">
-                            <input type="email" id="email" name="email" required autocomplete="email"
-                                class="w-full px-4 py-3 bg-transparent border border-x-border rounded-lg text-x-text placeholder-x-text-secondary focus:outline-none focus:ring-2 focus:ring-x-blue focus:border-transparent transition-all duration-200"
-                                placeholder="Enter your email" />
-                        </div>
-                        <div id="email-error" class="text-x-error text-sm min-h-[20px]"></div>
-                    </div>
-
-                    <!-- Password Field -->
-                    <div class="space-y-2">
-                        <label for="password" class="block text-sm font-medium text-x-text">
-                            Password
-                        </label>
-                        <div class="relative">
-                            <input type="password" id="password" name="password" required autocomplete="new-password"
-                                class="w-full px-4 py-3 bg-transparent border border-x-border rounded-lg text-x-text placeholder-x-text-secondary focus:outline-none focus:ring-2 focus:ring-x-blue focus:border-transparent transition-all duration-200"
-                                placeholder="Create a password" />
-                        </div>
-                        <div id="password-error" class="text-x-error text-sm min-h-[20px]"></div>
-                    </div>
-
-                    <!-- Submit Button -->
-                    <button type="submit"
-                        class="w-full bg-x-blue hover:bg-x-blue-hover text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-x-blue focus:ring-offset-2 focus:ring-offset-x-card">
-                        Create Account
-                    </button>
-                </form>
-
-                <!-- Login Link -->
-                <div class="mt-8 text-center">
-                    <p class="text-x-text-secondary text-sm">
-                        Already have an account?
-                        <a href="/auth/login.html"
-                            class="text-x-blue hover:text-x-blue-hover font-medium transition-colors duration-200 hover:underline">
-                            Sign in
-                        </a>
-                    </p>
+                    <div id="name-error" class="text-x-error text-sm min-h-[20px]"></div>
                 </div>
+
+                <!-- Email Field -->
+                <div class="space-y-2">
+                    <label for="email" class="block text-sm font-medium text-x-text">
+                        Email Address
+                    </label>
+                    <div class="relative">
+                        <input type="email" id="email" name="email" required autocomplete="email"
+                            class="w-full px-4 py-3 bg-transparent border border-x-border rounded-lg text-x-text placeholder-x-text-secondary focus:outline-none focus:ring-2 focus:ring-x-blue focus:border-transparent transition-all duration-200"
+                            placeholder="Enter your email" />
+                    </div>
+                    <div id="email-error" class="text-x-error text-sm min-h-[20px]"></div>
+                </div>
+
+                <!-- Password Field -->
+                <div class="space-y-2">
+                    <label for="password" class="block text-sm font-medium text-x-text">
+                        Password
+                    </label>
+                    <div class="relative">
+                        <input type="password" id="password" name="password" required autocomplete="new-password"
+                            class="w-full px-4 py-3 bg-transparent border border-x-border rounded-lg text-x-text placeholder-x-text-secondary focus:outline-none focus:ring-2 focus:ring-x-blue focus:border-transparent transition-all duration-200"
+                            placeholder="Create a password" />
+                    </div>
+                    <div id="password-error" class="text-x-error text-sm min-h-[20px]"></div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit"
+                    class="w-full bg-x-blue hover:bg-x-blue-hover text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-x-blue focus:ring-offset-2 focus:ring-offset-x-card">
+                    Create Account
+                </button>
+            </form>
+
+            <!-- Login Link -->
+            <div class="mt-8 text-center">
+                <p class="text-x-text-secondary text-sm">
+                    Already have an account?
+                    <a href="/auth/login.html"
+                        class="text-x-blue hover:text-x-blue-hover font-medium transition-colors duration-200 hover:underline">
+                        Sign in
+                    </a>
+                </p>
             </div>
-
-
         </div>
 
 
-        <script src="/src/auth/regsiter.ts"></script>
-    </body>
+    </div>
+
+
+    <script src="/src/auth/regsiter.ts"></script>
+</body>
 
 </html>

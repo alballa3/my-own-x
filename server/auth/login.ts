@@ -13,7 +13,7 @@ export default async function Login(req: http.IncomingMessage, res: http.ServerR
         res.statusCode = 400;
 
         res.end(JSON.stringify({
-            error: "YOU CANT REGISTER IF YOUR authorized"
+            error: "User is already authenticated"
         }))
         return;
     }
