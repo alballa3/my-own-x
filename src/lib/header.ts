@@ -1,7 +1,15 @@
-import { getUserFrontEnd } from "./users"
+import { getUserFrontEnd, type UserInDB } from "./users"
 
 (async () => {
-    let session = await getUserFrontEnd()
+    console.log("header.ts loaded")
+    let session: UserInDB | null = null;
+
+    try {
+        session = await getUserFrontEnd();
+    } catch (err) {
+        console.error("Failed to get user session:", err);
+    } 
+    console.log(session)
     const body = document.querySelector("body") as HTMLBodyElement
     const header = document.createElement("header")
     header.id = "header"
@@ -47,7 +55,7 @@ import { getUserFrontEnd } from "./users"
 
     } else {
         const username = session.name.charAt(0).toUpperCase()
-        div.innerHTML = `
+        authControls.innerHTML = `
                 <div class="flex items-center gap-3 px-3 py-2 rounded-full hover:bg-gray-900/50 transition-colors duration-200">
                     <div class="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center text-white text-sm font-medium">
                         ${username}
@@ -69,7 +77,7 @@ import { getUserFrontEnd } from "./users"
             logout.textContent = 'Logging out...';
 
             const response = await fetch(`${import.meta.env.VITE_BACKEND}/auth/logout`, {
-                method: "GET",
+                method: "POST",
                 credentials: "include"
             });
 

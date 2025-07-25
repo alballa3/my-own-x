@@ -5,7 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Account</title>
-
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <style>
+      body {
+        font-family: 'Poppins', sans-serif;
+      }
+    </style>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -39,7 +46,7 @@
 
         <!-- Form Container -->
         <div class="bg-x-card rounded-2xl border border-x-border p-8 shadow-2xl">
-            <form id="form" class="space-y-6">
+            <form id="form" class="space-y-6"  method="post">
                 <!-- Name Field -->
                 <div class="space-y-2">
                     <label for="name" class="block text-sm font-medium text-x-text">
@@ -102,7 +109,7 @@
     </div>
 
 
-    <script src="/src/auth/regsiter.ts"></script>
+    <script src="/src/auth/regsiter.ts" type="module"></script>
 </body>
 
 </html>

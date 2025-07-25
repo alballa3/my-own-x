@@ -39,12 +39,10 @@ export function createSession(Remember: boolean): session {
 export function isAuth(req: IncomingMessage, check: boolean) {
     // const cookie = req.headers.cookie;
     const rawCookie = req.headers.cookie;
-    if (!rawCookie) {
-        return false;
-    }
+    if (!rawCookie) return false
     if (check) {
         const sessionId = rawCookie.split("=")[1];
-        console.log(sessionId)
+        if (!sessionId) return false
         const usersInDb = FindAll("users");
         const allUsers = Object.values(usersInDb || {}) as unknown as UserInDB[];
         // Find the user who has a session with the matching session ID
@@ -58,12 +56,19 @@ export function isAuth(req: IncomingMessage, check: boolean) {
     }
     return true
 }
+function parseCookies(cookieHeader = "") {
+    return Object.fromEntries(cookieHeader.split(";").map(c => {
+        const [k, v] = c.trim().split("=");
+        return [k, decodeURIComponent(v)];
+    }));
+}
+
 export function getUser(req: IncomingMessage, res: ServerResponse) {
-    const rawCookie = req.headers.cookie;
-    if (!rawCookie) {
-        return false;
+    const cookie = parseCookies(req.headers.cookie);
+    if (!cookie) {
+        return res.end(JSON.stringify(null));
     }
-    const sessionId = rawCookie.split("=")[1];
+    const sessionId = cookie.user;
     const usersInDb = FindAll("users");
     const allUsers = Object.values(usersInDb || {}) as unknown as UserInDB[];
     // Find the user who has a session with the matching session ID
@@ -72,7 +77,7 @@ export function getUser(req: IncomingMessage, res: ServerResponse) {
         if (check) {
             return res.end(JSON.stringify(users));
         }
-    }``
+    } ``
     return res.end(JSON.stringify(null));
 }
 

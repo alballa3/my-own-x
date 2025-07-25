@@ -14,6 +14,7 @@
     "vite": "^7.0.4"
   },
   "dependencies": {
+    "dayjs": "^1.11.13",
     "http": "^0.0.1-security",
     "zod": "^4.0.5"
   }

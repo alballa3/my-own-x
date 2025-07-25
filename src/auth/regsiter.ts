@@ -35,22 +35,23 @@ import { getUserFrontEnd } from "..";
         document.querySelectorAll("input").forEach(input => {
             input.disabled = true
         })
-        const response = await fetch(`http://localhost:4000/auth/register`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            credentials: "include",
-            body: JSON.stringify({
-                email: email?.value,
-                name: name?.value,
-                password: password?.value
-            })
-        });
-        document.querySelectorAll("input").forEach(input => {
-            input.disabled = false
-        })
+
         try {
+            const response = await fetch(`http://localhost:4000/auth/register`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "include",
+                body: JSON.stringify({
+                    email: email?.value,
+                    name: name?.value,
+                    password: password?.value
+                })
+            });
+            document.querySelectorAll("input").forEach(input => {
+                input.disabled = false
+            })
             const json = await response.json();
             console.log(json);
 

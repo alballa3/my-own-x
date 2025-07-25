@@ -6,20 +6,32 @@ interface Session {
 }
 
 interface IUser {
-    id:string,
+    id: string,
     name: string,
     email: string,
     password: string,
     session: Session[],
 }
-interface UserInDB extends IUser {
+export interface UserInDB extends IUser {
     created_at: Date | String
 }
 export async function getUserFrontEnd(): Promise<UserInDB | null> {
-    const reponse = await fetch(`${import.meta.env.VITE_BACKEND}/auth/session`, {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND}/auth/session`, {
         method: "GET",
-        credentials: "include"
-    })
-    const json = await reponse.json() as UserInDB | null
-    return json || null
-}
+        credentials: "include",
+      });
+  
+      if (!response.ok) {
+        // Not authenticated or server error
+        return null;
+      }
+  
+      const json = await response.json();
+      return json || null;
+    } catch (err) {
+      console.error("getUserFrontEnd error:", err);
+      return null;
+    }
+  }
+  

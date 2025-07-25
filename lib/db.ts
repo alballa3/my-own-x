@@ -37,12 +37,14 @@ export function FindAll(table: string) {
   return db[table];
 }
 export function FindBy(table: string, record: string, value: string) {
+  if (!table || !record || !value) {
+    throw Error("table, record, and value are required");
+  }
   const allUser = FindAll(table)
   let array = Object.values(allUser || {})
   let check = array.find((e) => e[record] === value)
   return check
-}
-export function Find(table: string, id: string) {
+}export function Find(table: string, id: string) {
   if (!table || !id) {
     throw Error("table or id is required");
   }

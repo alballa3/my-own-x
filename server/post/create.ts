@@ -11,19 +11,20 @@ const schama = zod.object({
 })
 export default async function createPost(req: http.IncomingMessage, res: http.ServerResponse) {
     let body = await getRequestBody(req)
-    let auth = isAuth(req, false)
-    if (!auth) {
-        res.statusCode = 400;
-        res.end(JSON.stringify({
-            error: "You Must To be authorized To Post"
-        }))
-        return;
-    }
+    let auth = isAuth(req, true)
+ 
     let json = JsonParse(body as string)
     if (!json) {
         res.statusCode = 400;
         res.end(JSON.stringify({
             error: "Failed To Parse an JSON"
+        }))
+        return;
+    }
+    if (!auth) {
+        res.statusCode = 400;
+        res.end(JSON.stringify({
+            error: "You Must To be authorized To Post"
         }))
         return;
     }
