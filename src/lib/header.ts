@@ -1,40 +1,38 @@
 import { getUserFrontEnd } from "./users"
-console.log("header.ts")
-let session = await getUserFrontEnd()
-const body = document.querySelector("body") as HTMLBodyElement
-const header = document.createElement("header")
-header.id = "header"
-const nav = document.createElement("nav") as HTMLElement
-// header.setAttribute('role', 'banner');
-// nav.setAttribute('role', 'navigation');
-// nav.setAttribute('aria-label', 'Main navigation');
 
-const div = document.createElement("div")
-div.className = "flex justify-between items-center w-full"
-nav.className = "flex justify-end items-center max-w-6xl mx-auto"
+(async () => {
+    let session = await getUserFrontEnd()
+    const body = document.querySelector("body") as HTMLBodyElement
+    const header = document.createElement("header")
+    header.id = "header"
+    const nav = document.createElement("nav") as HTMLElement
 
-// Left section: Home & Features
-const navLinks = document.createElement("div")
-navLinks.className = "flex gap-4 items-center"
+    const div = document.createElement("div")
+    div.className = "flex justify-between items-center w-full"
+    nav.className = "flex justify-end items-center max-w-6xl mx-auto"
 
-navLinks.innerHTML = `
+    // Left section: Home & Features
+    const navLinks = document.createElement("div")
+    navLinks.className = "flex gap-4 items-center"
+
+    navLinks.innerHTML = `
 <a href="/" class="text-white text-sm font-medium hover:text-gray-300 transition">Home</a>
 <a href="/features.html" class="text-white text-sm font-medium hover:text-gray-300 transition">Features</a>
 `
 
-// Right section: Auth or User Info
-const authControls = document.createElement("div")
-authControls.className = "flex gap-3 items-center"
+    // Right section: Auth or User Info
+    const authControls = document.createElement("div")
+    authControls.className = "flex gap-3 items-center"
 
-// Apply header base classes - Twitter X black theme
-header.className = "bg-black px-4 py-3 border-b border-gray-800"
-nav.append(div)
-header.append(nav)
-body.prepend(header)
-div.append(navLinks, authControls)
-console.log("div")
-if (!session) {
-    const auth = `
+    // Apply header base classes - Twitter X black theme
+    header.className = "bg-black px-4 py-3 border-b border-gray-800"
+    nav.append(div)
+    header.append(nav)
+    body.prepend(header)
+    div.append(navLinks, authControls)
+    console.log("div")
+    if (!session) {
+        const auth = `
        <a href="/auth/login.html" 
                    class="text-white no-underline px-4 py-2 rounded-full font-medium transition-all duration-200 
                           border border-gray-600 hover:bg-gray-900">
@@ -45,11 +43,11 @@ if (!session) {
                           bg-white hover:bg-gray-200">
                     Sign up
                 </a>`
-    authControls.innerHTML = auth
+        authControls.innerHTML = auth
 
-} else {
-    const username = session.name.charAt(0).toUpperCase()
-    div.innerHTML = `
+    } else {
+        const username = session.name.charAt(0).toUpperCase()
+        div.innerHTML = `
                 <div class="flex items-center gap-3 px-3 py-2 rounded-full hover:bg-gray-900/50 transition-colors duration-200">
                     <div class="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center text-white text-sm font-medium">
                         ${username}
@@ -62,29 +60,30 @@ if (!session) {
                     Log out
                 </button>
     `
-}
-
-const logout = document.getElementById("logout") as HTMLButtonElement | null;
-logout?.addEventListener("click", async () => {
-    try {
-        logout.disabled = true;
-        logout.textContent = 'Logging out...';
-
-        const response = await fetch(`${import.meta.env.VITE_BACKEND}/auth/logout`, {
-            method: "GET",
-            credentials: "include"
-        });
-
-        if (!response.ok) {
-            throw new Error(`Logout failed: ${response.status}`);
-        }
-
-        window.location.href = "/";
-    } catch (error) {
-        console.error('Logout failed:', error);
-        logout.disabled = false;
-        logout.textContent = 'Log out';
-        // Consider showing a more user-friendly error message/modal here
-        alert('Logout failed. Please try again.');
     }
-});
+
+    const logout = document.getElementById("logout") as HTMLButtonElement | null;
+    logout?.addEventListener("click", async () => {
+        try {
+            logout.disabled = true;
+            logout.textContent = 'Logging out...';
+
+            const response = await fetch(`${import.meta.env.VITE_BACKEND}/auth/logout`, {
+                method: "GET",
+                credentials: "include"
+            });
+
+            if (!response.ok) {
+                throw new Error(`Logout failed: ${response.status}`);
+            }
+
+            window.location.href = "/";
+        } catch (error) {
+            console.error('Logout failed:', error);
+            logout.disabled = false;
+            logout.textContent = 'Log out';
+            // Consider showing a more user-friendly error message/modal here
+            alert('Logout failed. Please try again.');
+        }
+    });
+})()

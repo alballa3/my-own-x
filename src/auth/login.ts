@@ -1,51 +1,58 @@
-const email = document.getElementById("email") as HTMLInputElement
-const password = document.getElementById("password") as HTMLInputElement
-const emailError = document.getElementById("email_error")!
-const passwordError = document.getElementById("password_error")!
+import { getUserFrontEnd } from ".."
 
-const form = document.getElementById("form")
-form?.addEventListener("submit", async (e) => {
-    e.preventDefault()
-    let hasError = false;
-    emailError.textContent = "";
-    passwordError.textContent = "";
+(async () => {
+    let session = await getUserFrontEnd()
+    if (session) window.location.href = "/"
+    const email = document.getElementById("email") as HTMLInputElement
+    const password = document.getElementById("password") as HTMLInputElement
+    const emailError = document.getElementById("email_error")!
+    const passwordError = document.getElementById("password_error")!
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email.value)) {
-        emailError.textContent = "Please enter a valid email";
-        hasError = true;
-    }
+    const form = document.getElementById("form")
+    form?.addEventListener("submit", async (e) => {
+        e.preventDefault()
+        let hasError = false;
+        emailError.textContent = "";
+        passwordError.textContent = "";
 
-    if (password.value.length < 6) {
-        passwordError.textContent = "The password must be at least 6 characters";
-        hasError = true;
-    } if (hasError) return;
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email.value)) {
+            emailError.textContent = "Please enter a valid email";
+            hasError = true;
+        }
 
-    const user = {
-        email: email.value,
-        password: password.value
-    }
-    document.querySelectorAll("input").forEach(input => {
-        input.disabled = true
-      })
-    const response = await fetch(`http://localhost:4000/auth/login`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        credentials: "include",
-        body: JSON.stringify(user)
-    });
+        if (password.value.length < 6) {
+            passwordError.textContent = "The password must be at least 6 characters";
+            hasError = true;
+        } if (hasError) return;
 
-    const json = await response.json();
-    console.log(json);
-    document.querySelectorAll("input").forEach(input => {
-        input.disabled = false
-      })
-    if (!response.ok) {
+        const user = {
+            email: email.value,
+            password: password.value
+        }
+        document.querySelectorAll("input").forEach(input => {
+            input.disabled = true
+        })
+        const response = await fetch(`http://localhost:4000/auth/login`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            credentials: "include",
+            body: JSON.stringify(user)
+        });
 
-        passwordError.textContent = json.error || "Register Failed";
-        return;
-    }
-    window.location.href = "/";
-})
+        const json = await response.json();
+        console.log(json);
+        document.querySelectorAll("input").forEach(input => {
+            input.disabled = false
+        })
+        if (!response.ok) {
+
+            passwordError.textContent = json.error || "Register Failed";
+            return;
+        }
+        window.location.href = "/";
+    })
+
+})()

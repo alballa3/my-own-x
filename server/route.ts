@@ -2,6 +2,8 @@ import { Route } from "../types/route";
 import Login from "./auth/login";
 import register from "./auth/register";
 import { getUser, logout } from "./auth/session";
+import createPost from "./post/create";
+import ViewAllPosts from "./post/view";
 
 export const route: Route[] = [
   {
@@ -24,4 +26,15 @@ export const route: Route[] = [
     path: "/auth/logout",
     method: "POST",
     handler: logout
-  }];
+  },
+  {
+    path: "/post/create",
+    method: "POST",
+    handler: createPost
+  },
+  {
+    path: "/post/all",
+    method: "GET",
+    handler: ViewAllPosts
+  }
+];
