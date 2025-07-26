@@ -1,5 +1,6 @@
 import { Route } from "../types/route";
 import Login from "./auth/login";
+import profile from "./auth/profile";
 import register from "./auth/register";
 import { getUser, logout } from "./auth/session";
 import createPost from "./post/create";
@@ -21,6 +22,11 @@ export const route: Route[] = [
     path: "/auth/session",
     method: "GET",
     handler: getUser
+  },
+  {
+    path: "/auth/profile",
+    method: "GET",
+    handler: profile
   },
   {
     path: "/auth/logout",

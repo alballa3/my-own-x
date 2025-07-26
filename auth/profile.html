@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="User profile - View posts and activity" />
+    <title>Profile / Social Feed</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1e293b;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 4px;
+        }
+
+        /* Profile header background */
+        .profile-header-bg {
+            background: linear-gradient(135deg, #1da1f2 0%, #1570a6 100%);
+        }
+
+
+
+        /* Loading shimmer */
+        .shimmer {
+            background: linear-gradient(90deg, #1e293b 25%, #334155 50%, #1e293b 75%);
+            background-size: 200% 100%;
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: 200% 0;
+            }
+
+            100% {
+                background-position: -200% 0;
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-slate-950 text-white min-h-screen">
+    <!-- Toast notifications -->
+    <div id="toastContainer" class="fixed top-4 right-4 z-50 space-y-2"></div>
+
+    <main class="max-w-4xl mx-auto">
+        <!-- Profile Header -->
+        <section class="relative">
+            <!-- Cover Photo -->
+            <div class="h-48 md:h-64 profile-header-bg relative overflow-hidden">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                <button id="editCoverBtn"
+                    class="absolute top-4 right-4 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-colors">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Profile Info -->
+            <div class="px-6 pb-6">
+                <div class="flex flex-col md:flex-row md:items-end md:justify-between -mt-16 md:-mt-20">
+                    <!-- Avatar and basic info -->
+                    <div class="flex flex-col md:flex-row md:items-end md:space-x-6">
+                        <!-- Avatar -->
+                        <div class="relative mb-4 md:mb-0">
+                            <div id="userAvatar"
+                                class="w-32 h-32 md:w-40 md:h-40 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center shadow-xl ring-4 ring-slate-950">
+                                <span id="avatarInitial" class="text-4xl md:text-5xl font-bold text-white">U</span>
+                            </div>
+                            <button id="editAvatarBtn"
+                                class="absolute bottom-2 right-2 bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full shadow-lg transition-colors">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25z" />
+                                </svg>
+                            </button>
+                        </div>
+
+                        <!-- User info -->
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center space-x-2 mb-2">
+                                <h1 id="userName" class="text-2xl md:text-3xl font-bold text-white">Loading...</h1>
+                                <div class="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
+                                    <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                </div>
+                            </div>
+                            <p id="userHandle" class="text-slate-400 text-lg mb-3">@loading</p>
+                            <p id="userBio" class="text-white text-base leading-relaxed mb-4 max-w-md">
+                                Loading user bio...
+                            </p>
+
+                            <!-- User stats -->
+                            <div class="flex items-center space-x-6 text-sm">
+                                <div class="flex items-center space-x-1">
+                                    <svg class="w-4 h-4 text-slate-400" fill="currentColor" viewBox="0 0 24 24">
+                                        <path
+                                            d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" />
+                                    </svg>
+                                    <span id="userLocation" class="text-slate-400">Location</span>
+                                </div>
+                                <div class="flex items-center space-x-1">
+                                    <svg class="w-4 h-4 text-slate-400" fill="currentColor" viewBox="0 0 24 24">
+                                        <path
+                                            d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z" />
+                                    </svg>
+                                    <span id="joinDate" class="text-slate-400">Joined</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action buttons -->
+                    <div class="flex items-center space-x-3 mt-6 md:mt-0">
+                        <button id="editProfileBtn"
+                            class="bg-transparent border border-slate-600 hover:border-slate-500 text-white font-medium py-2 px-6 rounded-full transition-colors">
+                            Edit profile
+                        </button>
+                        <button
+                            class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-6 rounded-full transition-colors">
+                            Share profile
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Follow stats -->
+                <div class="flex items-center space-x-6 mt-6">
+                    <button class="hover:underline transition-colors">
+                        <span id="followingCount" class="font-bold text-white">0</span>
+                        <span class="text-slate-400 ml-1">Following</span>
+                    </button>
+                    <button class="hover:underline transition-colors">
+                        <span id="followersCount" class="font-bold text-white">0</span>
+                        <span class="text-slate-400 ml-1">Followers</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Posts Section -->
+        <section class="pb-20">
+            <!-- Section Header -->
+            <div class="border-b border-slate-800 px-6 py-4">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-xl font-bold text-white">Posts</h2>
+                    <span id="postsCount" class="text-slate-400 text-sm">0 posts</span>
+                </div>
+            </div>
+
+            <!-- Loading skeleton -->
+            <div id="postsLoadingSkeleton" class="space-y-1">
+                <div class="p-6 border-b border-slate-800">
+                    <div class="flex space-x-4 animate-pulse">
+                        <div class="w-12 h-12 bg-slate-800 rounded-full shimmer"></div>
+                        <div class="flex-1 space-y-3">
+                            <div class="flex space-x-2">
+                                <div class="h-4 bg-slate-800 rounded w-24 shimmer"></div>
+                                <div class="h-4 bg-slate-800 rounded w-16 shimmer"></div>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="h-4 bg-slate-800 rounded w-full shimmer"></div>
+                                <div class="h-4 bg-slate-800 rounded w-3/4 shimmer"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6 border-b border-slate-800">
+                    <div class="flex space-x-4 animate-pulse">
+                        <div class="w-12 h-12 bg-slate-800 rounded-full shimmer"></div>
+                        <div class="flex-1 space-y-3">
+                            <div class="flex space-x-2">
+                                <div class="h-4 bg-slate-800 rounded w-20 shimmer"></div>
+                                <div class="h-4 bg-slate-800 rounded w-12 shimmer"></div>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="h-4 bg-slate-800 rounded w-5/6 shimmer"></div>
+                                <div class="h-4 bg-slate-800 rounded w-2/3 shimmer"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Empty state -->
+            <div id="postsEmptyState" class="hidden text-center py-20 px-6">
+                <div class="w-20 h-20 bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <svg class="w-10 h-10 text-slate-500" fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                    </svg>
+                </div>
+                <h2 class="text-2xl font-bold text-slate-300 mb-3">No posts yet</h2>
+                <p class="text-slate-500 max-w-md mx-auto leading-relaxed mb-6">
+                    When you post something, it will show up here.
+                </p>
+                <a href="/"
+                    class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-medium py-3 px-6 rounded-full transition-colors">
+                    Create your first post
+                </a>
+            </div>
+
+            <!-- Posts feed -->
+            <div id="userPostsFeed" class="divide-y divide-slate-800">
+            </div>
+        </section>
+
+        <!-- Scroll to top -->
+        <button id="scrollToTop"
+            class="hidden fixed bottom-6 right-6 bg-slate-800 hover:bg-slate-700 text-white p-3 rounded-full shadow-lg transition-colors z-30">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z" />
+            </svg>
+        </button>
+    </main>
+
+    <!-- Scripts -->
+    <script type="module" src="/src/lib/header.ts"></script>
+    <script type="module" src="/src/posts/handleLikes.ts"></script>
+    <script type="module" src="/src/profile/index.ts"></script>
+
+    <!-- Simple functionality -->
+    <script>
+        // Scroll to top
+        window.addEventListener('scroll', function () {
+            const scrollBtn = document.getElementById('scrollToTop');
+            if (window.pageYOffset > 500) {
+                scrollBtn?.classList.remove('hidden');
+            } else {
+                scrollBtn?.classList.add('hidden');
+            }
+        });
+
+        document.getElementById('scrollToTop')?.addEventListener('click', function () {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Simple toast notifications
+        window.showToast = function (message, type = 'info') {
+            const toast = document.createElement('div');
+            const bgColor = type === 'success' ? 'bg-green-600' : type === 'error' ? 'bg-red-600' : 'bg-blue-600';
+            toast.className = `${bgColor} text-white px-6 py-3 rounded-lg shadow-lg max-w-sm`;
+            toast.textContent = message;
+            document.getElementById('toastContainer')?.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        };
+
+        // Edit button handlers
+        document.getElementById('editProfileBtn')?.addEventListener('click', () => {
+            showToast('Edit profile feature coming soon!', 'info');
+        });
+
+        document.getElementById('editAvatarBtn')?.addEventListener('click', () => {
+            showToast('Edit avatar feature coming soon!', 'info');
+        });
+
+        document.getElementById('editCoverBtn')?.addEventListener('click', () => {
+            showToast('Edit cover photo feature coming soon!', 'info');
+        });
+    </script>
+</body>
+
+</html>

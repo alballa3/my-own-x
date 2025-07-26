@@ -57,17 +57,20 @@ export function isAuth(req: IncomingMessage, check: boolean) {
     return true
 }
 function parseCookies(cookieHeader = "") {
-    return Object.fromEntries(cookieHeader.split(";").map(c => {
-        const [k, v] = c.trim().split("=");
-        return [k, decodeURIComponent(v)];
-    }));
+    if (!cookieHeader.trim()) return {};
+    return Object.fromEntries(
+        cookieHeader.split(";")
+            .map(c => {
+                const [k, v] = c.trim().split("=");
+                return [k, v ? decodeURIComponent(v) : ""];
+            })
+            .filter(([k]) => k) // Remove empty keys
+    );
 }
-
 export function getUser(req: IncomingMessage, res: ServerResponse) {
     const cookie = parseCookies(req.headers.cookie);
-    if (!cookie) {
-        return res.end(JSON.stringify(null));
-    }
+    if (!cookie) return res.end(JSON.stringify(null));
+    if (!cookie.user) return res.end(JSON.stringify(null));
     const sessionId = cookie.user;
     const usersInDb = FindAll("users");
     const allUsers = Object.values(usersInDb || {}) as unknown as UserInDB[];
@@ -77,7 +80,7 @@ export function getUser(req: IncomingMessage, res: ServerResponse) {
         if (check) {
             return res.end(JSON.stringify(users));
         }
-    } ``
+    }
     return res.end(JSON.stringify(null));
 }
 

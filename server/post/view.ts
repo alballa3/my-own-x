@@ -7,7 +7,8 @@ export default function ViewAllPosts(req: http.IncomingMessage, res: http.Server
     const allPostsMap = FindAll("posts") as unknown as Record<string, IPost>;
     const allPostsArray: IPost[] = Object.values(allPostsMap);
     let posts = allPostsArray.map((post: IPost) => {
-        const user = FindBy("users", "id", post.user_id) as unknown as UserInDB;
+        const user = FindBy("users", "id", post.user_id,true) as unknown as UserInDB;
+        console.log(user)
         if (!user) {
             throw new Error(`User not found for post ${post.post_id}`);
         }

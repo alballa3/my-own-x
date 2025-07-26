@@ -8,7 +8,7 @@ import { getUserFrontEnd, type UserInDB } from "./users"
         session = await getUserFrontEnd();
     } catch (err) {
         console.error("Failed to get user session:", err);
-    } 
+    }
     console.log(session)
     const body = document.querySelector("body") as HTMLBodyElement
     const header = document.createElement("header")
@@ -56,7 +56,8 @@ import { getUserFrontEnd, type UserInDB } from "./users"
     } else {
         const username = session.name.charAt(0).toUpperCase()
         authControls.innerHTML = `
-                <div class="flex items-center gap-3 px-3 py-2 rounded-full hover:bg-gray-900/50 transition-colors duration-200">
+        <div>
+            <a href="/auth/profile" class="flex items-center gap-3 px-3 py-2 rounded-full hover:bg-gray-900/50 transition-colors duration-200">
                     <div class="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center text-white text-sm font-medium">
                         ${username}
                     </div>
@@ -67,6 +68,7 @@ import { getUserFrontEnd, type UserInDB } from "./users"
                                border border-gray-600 hover:bg-gray-900 hover:border-gray-500">
                     Log out
                 </button>
+                </a>
     `
     }
 

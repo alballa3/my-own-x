@@ -4,31 +4,46 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 dayjs.extend(relativeTime)
 
 export interface IPost {
-    user_id: string;
-    post_id: string;
-    post: string;
-    likes: number;
-    dislikes: number;
-    created_at: string;
-    updated_at: string;
-    user?: {
-        username: string;
-    };
+  user_id: string;
+  post_id: string;
+  post: string;
+  likes: number;
+  dislikes: number;
+  created_at: string;
+  updated_at: string;
+  user?: {
+    username: string;
+  };
 }
 
+function escapeHtml(unsafe: string) {
+  return unsafe
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
 export function createPost(content: IPost) {
-    const postHTML = `
-  <article class="border-b border-gray-800 p-4 hover:bg-gray-950/50 transition-colors" data-post-id="${content.post_id}">
+  const safePostId = escapeHtml(content.post_id);
+  const safeUsername = content.user?.username ? escapeHtml(content.user.username) : "Unknown";
+  const safeUsernameInitial = safeUsername !== "Unknown"
+    ? escapeHtml(content.user!.username[0] || "?")
+    : "?";
+  const safePost = escapeHtml(content.post);
+
+  const postHTML = `
+  <article class="border-b border-gray-800 p-4 hover:bg-gray-950/50 transition-colors" data-post-id="${safePostId}">
     <div class="flex space-x-3">
       <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
-        <span class="text-lg font-bold">${content.user?.username[0]}</span>
+        <span class="text-lg font-bold">${safeUsernameInitial}</span>
       </div>
       <div class="flex-1">
         <div class="flex items-center space-x-2">
-          <h3 class="font-bold text-white">${content.user?.username ?? "Unknown"}</h3>
+          <h3 class="font-bold text-white">${safeUsername}</h3>
           <span class="text-gray-500 text-sm">${dayjs(content.created_at).fromNow()}</span>
         </div>
-        <p class="mt-1 text-white">${content.post}</p>
+        <p class="mt-1 text-white">${safePost}</p>
         
         <div class="flex items-center gap-4 mt-3 text-sm text-gray-400">
           <!-- Like -->
@@ -51,5 +66,5 @@ export function createPost(content: IPost) {
     </div>
   </article>
     `;
-    return postHTML;
+  return postHTML;
 }
