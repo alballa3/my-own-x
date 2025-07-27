@@ -26,7 +26,7 @@ export function StoreUnique(table: string, record: string, data: Record<string, 
   let array = Object.values(allUser || {})
   let check = array.find((e) => e[record] === data[record])
   if (check) {
-    throw Error("The Email Exites Choose another one.")
+    throw Error(`The ${record} Exites Choose another one.`)
   }
   return Store(table, data)
 }
@@ -68,4 +68,13 @@ export function Delete(table: string, id: string) {
     throw Error("table or id is required");
   }
   delete db[table][id];
+}
+export function increment(table: string, key: string, id: { id_name: string, id: string }) {
+  const all = FindAll(table)
+  for (let i in all) {
+    if (all[i][id.id_name] == id.id) {
+      all[i].likes = all[i][key] + 1      
+    }
+  }
+  return all
 }

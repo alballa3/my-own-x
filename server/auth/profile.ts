@@ -11,7 +11,7 @@ export default async function profile(req: http.IncomingMessage, res: http.Serve
         }))
         return;
     }
-    const session=GetSession(req)
+    const session = GetSession(req)
     if (!session) {
         res.statusCode = 400;
         res.end(JSON.stringify({
@@ -19,9 +19,9 @@ export default async function profile(req: http.IncomingMessage, res: http.Serve
         }))
         return;
     }
-    let profile={
-        name:session.name,
-        posts:FindBy("posts", "user_id", session.id,false)
+    let profile = {
+        name: session.name,
+        posts: FindBy("posts", "user_id", session.id, false)
     }
     res.end(JSON.stringify(profile))
 

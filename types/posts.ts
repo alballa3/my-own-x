@@ -21,3 +21,10 @@ interface IComment {
     created_at: string,
     updated_at: string
 }
+export interface like {
+    user_id: string,
+    post_id: string,
+    // The Like True Is Like False Dislike
+    like: boolean,
+    created_at: string | Date
+}
