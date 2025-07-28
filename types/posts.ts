@@ -10,7 +10,7 @@ export interface IPost {
     updated_at: string,
     user?: {
         username: string,
-
+        is_liked?:boolean
     }
 }
 interface IComment {

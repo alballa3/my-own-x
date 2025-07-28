@@ -24,5 +24,4 @@ export default async function profile(req: http.IncomingMessage, res: http.Serve
         posts: FindBy("posts", "user_id", session.id, false)
     }
     res.end(JSON.stringify(profile))
-
 }

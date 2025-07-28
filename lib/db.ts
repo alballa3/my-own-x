@@ -84,3 +84,18 @@ export function increment(table: string, key: string, id: { id_name: string, id:
 
   throw Error("Record not found");
 }
+export function decrement(table: string, key: string, id: { id_name: string, id: string }) {
+  const all = FindAll(table);
+  if (!all) {
+    throw Error("Table not found");
+  }
+
+  for (let i in all) {
+    if (all[i][id.id_name] === id.id) {
+      all[i][key] = (all[i][key] || 0) -1;
+      return all[i]; // Return only the updated record
+    }
+  }
+
+  throw Error("Record not found");
+}

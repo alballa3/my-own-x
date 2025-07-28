@@ -6,9 +6,14 @@ const db_path = "./data.json"
 
 export let db: RecordDB = {};
 if (existsSync(db_path)) {
-  const data = readFileSync(db_path)
-  const json = JSON.parse(data.toLocaleString())
-  db = json
+  try {
+    const data = readFileSync(db_path)
+    const json = JSON.parse(data.toLocaleString())
+    db = json
+  } catch (error) {
+    console.log(error)
+    db={}
+  }
 }
 
 const server = http.createServer((req, res) => {

@@ -2,9 +2,8 @@ import http from "http"
 
 import { GetSession, isAuth } from "../auth/session"
 import { UserInDB } from "../../types/auth"
-import { parse } from "url";
 import { getRequestBody, JsonParse } from "../../lib/http";
-import { FindAll, FindBy, increment, Store, StoreUnique } from "../../lib/db";
+import { decrement, Delete, FindAll, FindBy, increment, Store, StoreUnique } from "../../lib/db";
 import { like } from "../../types/posts";
 
 
@@ -40,13 +39,22 @@ export default async function Dislike(req: http.IncomingMessage, res: http.Serve
         return;
     }
     let allLikes = FindAll("likes") as unknown as like
-    let check = Object.values(allLikes || {}).find((like: like) => like.post_id == id && like.user_id == session.id )
+    let check = Object.values(allLikes || {}).find((like: like) => like.post_id == id && like.user_id == session.id)
+    // it here to click if there is like comment it will remove it 
     if (check) {
-        res.statusCode = 400;
-        res.end(JSON.stringify({
-            error: "You Already Disliked This Post"
-        }))
-        return;
+        console.log(check)
+        for (const id in allLikes) {
+            console.log(allLikes[id])
+            if (allLikes[id].post_id == id && allLikes[id].user_id == session.id) {
+                decrement("posts", "dislikes", { id_name: "post_id", id: id })
+                res.statusCode = 200;
+                res.end(JSON.stringify({
+                    message: "Removed The Dislike"
+                }))
+                Delete("likes", id)
+                return;
+            }
+        }
     }
     const checkPost = FindBy("posts", "post_id", id, true)
     if (!checkPost) {
@@ -62,9 +70,9 @@ export default async function Dislike(req: http.IncomingMessage, res: http.Serve
         like: false,
         created_at: new Date()
     }
-    Store("dislikes", like)
+    Store("likes", like)
     res.statusCode = 200;
-    increment("posts", "dislikes", { id_name: "post_id", id: id })
+    increment("posts", "likes", { id_name: "post_id", id: id })
 
     res.end(JSON.stringify({
         message: "disliked"

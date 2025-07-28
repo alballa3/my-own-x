@@ -14,6 +14,7 @@ import { createPost, type IPost } from "../lib/post";
     }
     const reponse = await fetch(`${import.meta.env.VITE_BACKEND}/post/all`, {
         method: 'GET',
+        credentials: 'include',
         headers: {
             'Content-Type': 'application/json',
         },

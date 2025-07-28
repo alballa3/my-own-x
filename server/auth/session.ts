@@ -56,17 +56,7 @@ export function isAuth(req: IncomingMessage, check: boolean) {
     }
     return true
 }
-function parseCookies(cookieHeader = "") {
-    if (!cookieHeader.trim()) return {};
-    return Object.fromEntries(
-        cookieHeader.split(";")
-            .map(c => {
-                const [k, v] = c.trim().split("=");
-                return [k, v ? decodeURIComponent(v) : ""];
-            })
-            .filter(([k]) => k) // Remove empty keys
-    );
-}
+
 export function getUser(req: IncomingMessage, res: ServerResponse) {
     const cookie = parseCookies(req.headers.cookie);
     if (!cookie) return res.end(JSON.stringify(null));
@@ -102,14 +92,22 @@ export function logout(req: IncomingMessage, res: ServerResponse) {
     }
     return res.end(JSON.stringify(null));
 }
+function parseCookies(cookieHeader = "") {
+    if (!cookieHeader.trim()) return {};
+    return Object.fromEntries(
+        cookieHeader.split(";")
+            .map(c => {
+                const [k, v] = c.trim().split("=");
+                return [k, v ? decodeURIComponent(v) : ""];
+            })
+            .filter(([k]) => k) // Remove empty keys
+    );
+}
 export function GetSession(req: IncomingMessage): UserInDB | null {
-    const rawCookie = req.headers.cookie;
-
-    if (!rawCookie) {
-        return null;
-    }
-
-    const sessionId = rawCookie.split("=")[1];
+    const cookie = parseCookies(req.headers.cookie);
+    if (!cookie) { console.log("there is no cookie"); return null };
+    const sessionId = cookie.user;
+    if (!sessionId) { console.log("there is no User cookie",req.headers.cookie); return null }
     const usersInDb = FindAll("users");
     const allUsers = Object.values(usersInDb || {}) as unknown as UserInDB[];
     // Find the user who has a session with the matching session ID
@@ -119,6 +117,6 @@ export function GetSession(req: IncomingMessage): UserInDB | null {
             return users;
         }
     }
-
+    console.log("there is no user");
     return null;
 }

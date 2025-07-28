@@ -13,6 +13,7 @@ export interface IPost {
   updated_at: string;
   user?: {
     username: string;
+    is_liked: boolean
   };
 }
 
@@ -31,7 +32,7 @@ export function createPost(content: IPost) {
     ? escapeHtml(content.user!.username[0] || "?")
     : "?";
   const safePost = escapeHtml(content.post);
-
+  console.log(content.user?.is_liked )
   const postHTML = `
   <article class="border-b border-gray-800 p-4 hover:bg-gray-950/50 transition-colors" data-post-id="${safePostId}">
     <div class="flex space-x-3">
@@ -47,7 +48,7 @@ export function createPost(content: IPost) {
         
         <div class="flex items-center gap-4 mt-3 text-sm text-gray-400">
           <!-- Like -->
-          <button class="flex items-center gap-1 hover:text-red-400 transition like-btn" data-action="like">
+          <button class="flex items-center gap-1 hover:text-red-400 transition like-btn ${content.user?.is_liked ? 'text-red-400 liked' : ''}" data-action="like">
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd" />
             </svg>
@@ -64,7 +65,7 @@ export function createPost(content: IPost) {
         </div>
       </div>
     </div>
-  </article>
+</article>
     `;
   return postHTML;
 }

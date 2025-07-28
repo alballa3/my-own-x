@@ -4,7 +4,7 @@ import { getRequestBody, JsonParse } from "../../lib/http"
 import { GetSession, isAuth } from "../auth/session"
 import { IPost } from "../../types/posts"
 import { UserInDB } from "../../types/auth"
-import { Store } from "../../lib/db"
+import {  Store } from "../../lib/db"
 
 const schama = zod.object({
     post: zod.string().min(1).max(100),
@@ -27,7 +27,7 @@ export default async function createPost(req: http.IncomingMessage, res: http.Se
         }))
         return;
     }
-   
+
     const result = schama.safeParse(json)
     if (!result.success) {
         res.statusCode = 400;
@@ -35,6 +35,7 @@ export default async function createPost(req: http.IncomingMessage, res: http.Se
         return;
     }
     const session = GetSession(req) as UserInDB
+
     const Post: IPost = {
         post_id: (Date.now() * Math.round(Math.random() * 100)).toString(),
         user_id: session.id,
@@ -45,7 +46,7 @@ export default async function createPost(req: http.IncomingMessage, res: http.Se
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
         user: {
-            username: session.name
+            username: session.name,
         }
     }
     Store("posts", {
