@@ -14,8 +14,7 @@ export default async function Like(req: http.IncomingMessage, res: http.ServerRe
     try {
         json = JSON.parse(body as string);
     } catch (error) {
-        res.statusCode = 400;
-        res.end(JSON.stringify({
+        res.statusCode = 404; res.end(JSON.stringify({
             message: "Failed To Parse JSON",
             error: error
         }))
@@ -24,7 +23,7 @@ export default async function Like(req: http.IncomingMessage, res: http.ServerRe
 
     let auth = isAuth(req, true)
     if (!auth) {
-        res.statusCode = 400;
+        res.statusCode = 401;
         res.end(JSON.stringify({
             error: "You Must To be authorized To Post"
         }))
@@ -57,7 +56,7 @@ export default async function Like(req: http.IncomingMessage, res: http.ServerRe
     }
     const checkPost = FindBy("posts", "post_id", id, true)
     if (!checkPost) {
-        res.statusCode = 400;
+        res.statusCode = 404;
         res.end(JSON.stringify({
             error: "Post Not Found"
         }))
@@ -72,7 +71,7 @@ export default async function Like(req: http.IncomingMessage, res: http.ServerRe
     Store("likes", like)
     res.statusCode = 200;
     increment("posts", "likes", { id_name: "post_id", id: id })
-    
+
     res.end(JSON.stringify({
         message: "Liked"
     }))

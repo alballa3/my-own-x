@@ -30,6 +30,7 @@ export default async function Dislike(req: http.IncomingMessage, res: http.Serve
         }))
         return;
     }
+    const session = GetSession(req) as UserInDB
     const id = json.id
     if (!id || isNaN(id)) {
         res.statusCode = 400;
@@ -38,16 +39,8 @@ export default async function Dislike(req: http.IncomingMessage, res: http.Serve
         }))
         return;
     }
-    const session = GetSession(req) as UserInDB
-    if (!session) {
-        res.statusCode = 400;
-        res.end(JSON.stringify({
-            error: "You Must To be authorized To Post"
-        }))
-        return;
-    }
     let allLikes = FindAll("likes") as unknown as like
-    let check = Object.values(allLikes || {}).find((like: like) => like.post_id == id && like.user_id == session.id)
+    let check = Object.values(allLikes || {}).find((like: like) => like.post_id == id && like.user_id == session.id )
     if (check) {
         res.statusCode = 400;
         res.end(JSON.stringify({
@@ -74,6 +67,6 @@ export default async function Dislike(req: http.IncomingMessage, res: http.Serve
     increment("posts", "dislikes", { id_name: "post_id", id: id })
 
     res.end(JSON.stringify({
-        message: "Liked"
+        message: "disliked"
     }))
 }
