@@ -30,6 +30,7 @@ export function StoreUnique(table: string, record: string, data: Record<string, 
   }
   return Store(table, data)
 }
+
 export function FindAll(table: string) {
   if (!table) {
     throw Error("table is required");
@@ -92,7 +93,7 @@ export function decrement(table: string, key: string, id: { id_name: string, id:
 
   for (let i in all) {
     if (all[i][id.id_name] === id.id) {
-      all[i][key] = (all[i][key] || 0) -1;
+      all[i][key] = (all[i][key] || 0) - 1;
       return all[i]; // Return only the updated record
     }
   }

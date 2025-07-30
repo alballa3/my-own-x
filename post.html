@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post - Twitter Clone</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'twitter-blue': '#1DA1F2',
+                        'twitter-dark-blue': '#1991DA',
+                        'twitter-red': '#F91880',
+                        'twitter-green': '#00BA7C',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-black min-h-screen text-white">
+
+    <!-- Main Content -->
+    <div class="max-w-2xl mx-auto" id="post-container">
+        <!-- Post will be dynamically loaded here -->
+    </div>
+
+    <!-- Reply Form -->
+    <div class="max-w-2xl mx-auto border-b border-gray-800 px-4 py-3">
+        <div class="flex space-x-3">
+            <div
+                class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-lg flex-shrink-0">
+                YU
+            </div>
+            <div class="flex-1">
+                <form id="form">
+                    <textarea id="comment"
+                        class="w-full text-xl placeholder-gray-500 resize-none border-none outline-none bg-transparent text-white"
+                        placeholder="Post your reply" rows="3"></textarea>
+                    <div class="flex items-center justify-between mt-3">
+                        <div class="flex items-center space-x-4 text-twitter-blue">
+                            <button class="p-2 rounded-full hover:bg-gray-900 transition-colors">
+                                <i class="far fa-image text-lg"></i>
+                            </button>
+                            <button class="p-2 rounded-full hover:bg-gray-900 transition-colors">
+                                <i class="fas fa-poll text-lg"></i>
+                            </button>
+                            <button class="p-2 rounded-full hover:bg-gray-900 transition-colors">
+                                <i class="far fa-smile text-lg"></i>
+                            </button>
+                            <button class="p-2 rounded-full hover:bg-gray-900 transition-colors">
+                                <i class="far fa-calendar text-lg"></i>
+                            </button>
+                        </div>
+                        <button type="submit"
+                            class="bg-twitter-blue text-white px-6 py-2 rounded-full font-bold hover:bg-twitter-dark-blue transition-colors disabled:opacity-50">
+                            Reply
+                        </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- Comments/Replies Container -->
+    <div class="max-w-2xl mx-auto" id="replies-container">
+        <!-- Replies will be dynamically loaded here -->
+    </div>
+    <script type="module" src="/src/lib/header.ts"></script>
+    <script type="module" src="/src/posts/post-page.ts"></script>
+    <script type="module" src="/src/posts/handleLikes.ts"></script>
+
+</body>
+
+</html>
