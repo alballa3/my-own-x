@@ -31,8 +31,16 @@ document.addEventListener('click', async (e) => {
         }).showToast()
         return;
     }
-    like_button.classList.add('liked', 'text-red-400')
-    like_button.classList.remove('text-gray-500')
-    like_count.textContent = (parseInt(like_count.textContent || '0', 10) + 1).toString()
+    if (like_button.classList.contains('liked')) {
+        like_button.classList.remove('liked', 'text-red-400')
+        like_button.classList.add('text-gray-500')
+        like_count.textContent = (parseInt(like_count.textContent || '0', 10) - 1).toString()
+        return
+    }
+    else {
+        like_button.classList.add('liked', 'text-red-400')
+        like_button.classList.remove('text-gray-500')
+        like_count.textContent = (parseInt(like_count.textContent || '0', 10) + 1).toString()
+    }
 
 })

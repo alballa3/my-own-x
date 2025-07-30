@@ -13,8 +13,7 @@ export default async function Dislike(req: http.IncomingMessage, res: http.Serve
     try {
         json = JSON.parse(body as string);
     } catch (error) {
-        res.statusCode = 400;
-        res.end(JSON.stringify({
+        res.statusCode = 404; res.end(JSON.stringify({
             message: "Failed To Parse JSON",
             error: error
         }))
@@ -23,13 +22,12 @@ export default async function Dislike(req: http.IncomingMessage, res: http.Serve
 
     let auth = isAuth(req, true)
     if (!auth) {
-        res.statusCode = 400;
+        res.statusCode = 401;
         res.end(JSON.stringify({
             error: "You Must To be authorized To Post"
         }))
         return;
     }
-    const session = GetSession(req) as UserInDB
     const id = json.id
     if (!id || isNaN(id)) {
         res.statusCode = 400;
@@ -38,27 +36,30 @@ export default async function Dislike(req: http.IncomingMessage, res: http.Serve
         }))
         return;
     }
+    const session = GetSession(req) as UserInDB
+    if (!session) {
+        res.statusCode = 400;
+        res.end(JSON.stringify({
+            error: "You Must To be authorized To Post"
+        }))
+        return;
+    }
+    // Handle the Like Logic 
     let allLikes = FindAll("likes") as unknown as like
-    let check = Object.values(allLikes || {}).find((like: like) => like.post_id == id && like.user_id == session.id)
-    // it here to click if there is like comment it will remove it 
+    let check: [string, like] | undefined = Object.entries(allLikes).find(([_, like]) => like.post_id == id && like.user_id == session.id && !like.like)
     if (check) {
-        console.log(check)
-        for (const id in allLikes) {
-            console.log(allLikes[id])
-            if (allLikes[id].post_id == id && allLikes[id].user_id == session.id) {
-                decrement("posts", "dislikes", { id_name: "post_id", id: id })
-                res.statusCode = 200;
-                res.end(JSON.stringify({
-                    message: "Removed The Dislike"
-                }))
-                Delete("likes", id)
-                return;
-            }
-        }
+        const [like_id, like_check] = check
+        Delete("likes", like_id)
+        decrement("posts", "dislikes", { id_name: "post_id", id: like_check.post_id })
+        delete allLikes[like_id]
+        res.end(JSON.stringify({
+            message: "Unliked"
+        }))
+        return;
     }
     const checkPost = FindBy("posts", "post_id", id, true)
     if (!checkPost) {
-        res.statusCode = 400;
+        res.statusCode = 404;
         res.end(JSON.stringify({
             error: "Post Not Found"
         }))
@@ -72,9 +73,9 @@ export default async function Dislike(req: http.IncomingMessage, res: http.Serve
     }
     Store("likes", like)
     res.statusCode = 200;
-    increment("posts", "likes", { id_name: "post_id", id: id })
+    increment("posts", "dislikes", { id_name: "post_id", id: id })
 
     res.end(JSON.stringify({
-        message: "disliked"
+        message: "dislikes"
     }))
 }

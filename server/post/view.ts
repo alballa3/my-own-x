@@ -16,8 +16,8 @@ export default function ViewAllPosts(req: http.IncomingMessage, res: http.Server
         const session = GetSession(req) as UserInDB
 
         // let check = Object.values(allLikes || {}).find((like: like) => like.user_id == session?.id) ? true : false
-        let check = Object.values(allLikes || {}).find((like: like) => like.post_id == post.post_id && like.user_id == session.id)
-
+        let checkLike = Object.values(allLikes || {}).find((like: like) => like.post_id == post.post_id && like.user_id == session.id && like.like)
+        let checkDislike = Object.values(allLikes || {}).find((like: like) => like.post_id == post.post_id && like.user_id == session.id && !like.like)
         return {
             post_id: post.post_id,
             post: post.post,
@@ -28,8 +28,8 @@ export default function ViewAllPosts(req: http.IncomingMessage, res: http.Server
             updated_at: post.updated_at,
             user: {
                 username: user.name,
-                is_liked: check ? true : false
-
+                is_liked: checkLike ? true : false,
+                is_dislike: checkDislike ? true : false
             }
         }
     })

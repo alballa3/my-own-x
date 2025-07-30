@@ -14,19 +14,20 @@ export interface IPost {
   updated_at: string;
   user?: {
     username: string;
-    is_liked: boolean
+    is_liked: boolean;
+    is_dislike: boolean
   };
 }
 
 export interface IComment {
   user_id: string;
-  username:string
+  username: string
   comment: string;
   likes: number;
   dislikes: number;
   created_at: string;
   updated_at: string;
- 
+
 }
 
 function escapeHtml(unsafe: string) {
@@ -46,7 +47,7 @@ export function createPost(content: IPost) {
     : "?";
   const safePost = escapeHtml(content.post);
   const isLiked = content.user?.is_liked || false;
-
+  const is_disliked = content.user?.is_dislike || false;
   const postHTML = `
     <article class="border-b border-gray-800 p-4 hover:bg-gray-950/50 transition-colors" data-post-id="${safePostId}">
 
@@ -59,9 +60,13 @@ export function createPost(content: IPost) {
             <h3 class="font-bold text-white">${safeUsername}</h3>
             <span class="text-gray-500 text-sm">${dayjs(content.created_at).fromNow()}</span>
           </div>
-             <!-- Only the post content is clickable -->
-          <a href="/post?id=${safePostId}" class="block mt-1 text-white hover:underline">
-            ${safePost}
+         
+        <a 
+            href="/post?id=${safePostId}" 
+            class="block mt-1 text-white hover:text-blue-300 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
+            aria-label="View post by ${content.user?.username}"
+          >
+            <p class="whitespace-pre-wrap break-words">${safePost}</p>
           </a>
 
           <div class="flex items-center gap-4 mt-3 text-sm text-gray-400">
@@ -74,7 +79,7 @@ export function createPost(content: IPost) {
             </button>
     
             <!-- Dislike -->
-            <button class="flex items-center gap-1 hover:text-blue-400 transition dislike-btn" data-action="dislike">
+            <button class="flex items-center gap-1 hover:text-blue-400 transition dislike-btn ${is_disliked ? 'text-blue-400 dislike':''}" data-action="dislike">
               <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M10 18a1 1 0 01-1-1v-4H6a1 1 0 01-.894-1.447l4-8A1 1 0 0110 3h4a1 1 0 011 1v10a1 1 0 01-1 1h-2v3a1 1 0 01-1 1z" />
               </svg>

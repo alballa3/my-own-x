@@ -19,18 +19,6 @@ export default function ViewOne(req: http.IncomingMessage, res: http.ServerRespo
 
     let check = Object.values(allLikes || {}).find((like: like) => like.post_id == post.post_id && like.user_id == session?.id)
     const user = FindBy("users", "id", post.user_id, true) as unknown as UserInDB
-    let comment=post.comments.map((comment: IComment) => {
-        return {
-            user_id: comment.user_id,
-            username: comment.username,
-            comment: comment.comment,
-            likes: comment.likes,
-            dislikes: comment.dislikes,
-            created_at: comment.created_at,
-            updated_at: comment.updated_at
-        }
-    })
-    console.log(comment)
     return res.end(JSON.stringify({
         post_id: post.post_id,
         post: post.post,

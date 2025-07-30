@@ -4,7 +4,7 @@ import { GetSession, isAuth } from "../auth/session"
 import { UserInDB } from "../../types/auth"
 import { parse } from "url";
 import { getRequestBody, JsonParse } from "../../lib/http";
-import { FindAll, FindBy, increment, Store, StoreUnique } from "../../lib/db";
+import { decrement, FindAll, FindBy, increment, Store, StoreUnique } from "../../lib/db";
 import { like } from "../../types/posts";
 
 
@@ -46,11 +46,13 @@ export default async function Like(req: http.IncomingMessage, res: http.ServerRe
         return;
     }
     let allLikes = FindAll("likes") as unknown as like
-    let check = Object.values(allLikes || {}).find((like: like) => like.post_id == id && like.user_id == session.id)
+    let check: [string, like] | undefined = Object.entries(allLikes).find(([_, like]) => like.post_id == id && like.user_id == session.id && like.like)
     if (check) {
-        res.statusCode = 400;
+        const [like_id, like_check] = check
+        decrement("posts", "likes", { id_name: "post_id", id: like_check.post_id })
+        delete allLikes[like_id]
         res.end(JSON.stringify({
-            error: "You Already Liked This Post"
+            message: "Unliked"
         }))
         return;
     }
