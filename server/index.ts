@@ -28,10 +28,12 @@ const server = http.createServer((req, res) => {
   res.setHeader("Access-Control-Allow-Credentials", "true");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
   res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+
   try {
-    res.statusCode = 429
     rate(req)
   } catch (error) {
+    console.log(error)
+    res.statusCode = 429
     res.end(JSON.stringify({ error: error.essage || "Too many request" }))
   }
   if (handler) {

@@ -7,7 +7,7 @@ document.addEventListener('click', async (e) => {
     const article = like_button.closest("article")
     const post_id = article?.getAttribute("data-post-id")
     const like_count = like_button.querySelector('.like-count') as HTMLSpanElement
-    const reponse = await fetch(`${import.meta.env.VITE_BACKEND}/post/like`, {
+    const response = await fetch(`${import.meta.env.VITE_BACKEND}/post/like`, {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -18,8 +18,8 @@ document.addEventListener('click', async (e) => {
         })
 
     })
-    const json = await reponse.json()
-    if (!reponse.ok) {
+    const json = await response.json()
+    if (!response.ok) {
         Toastify({
             text: json.message || json.error || "NETWORK ERROR",
             duration: 3000,
@@ -27,11 +27,9 @@ document.addEventListener('click', async (e) => {
             gravity: "bottom", // `top` or `bottom`
             position: "center", // `left`, `center` or `right`
             stopOnFocus: true, // Prevents dismissing of toast on hover
-
         }).showToast()
         return;
-    }
-    if (like_button.classList.contains('liked')) {
+    }    if (like_button.classList.contains('liked')) {
         like_button.classList.remove('liked', 'text-red-400')
         like_button.classList.add('text-gray-500')
         like_count.textContent = (parseInt(like_count.textContent || '0', 10) - 1).toString()
