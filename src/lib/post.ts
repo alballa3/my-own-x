@@ -21,7 +21,7 @@ export interface IPost {
 
 export interface IComment {
   user_id: string;
-  username: string
+  username: string;
   comment: string;
   likes: number;
   dislikes: number;
@@ -95,7 +95,6 @@ export function createPost(content: IPost) {
 
 
 export function createReply(reply: IComment): string {
-  console.log(reply)
   const safeUsername = reply.username ? escapeHtml(reply.username) : "Unknown";
   const safeUsernameInitial = safeUsername !== "Unknown"
     ? escapeHtml(reply.username[0] || "?")

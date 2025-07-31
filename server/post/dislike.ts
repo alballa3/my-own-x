@@ -46,11 +46,11 @@ export default async function Dislike(req: http.IncomingMessage, res: http.Serve
     }
     // Handle the Like Logic 
     let allLikes = FindAll("likes") as unknown as like
-    let check: [string, like] | undefined = Object.entries(allLikes).find(([_, like]) => like.post_id == id && like.user_id == session.id && !like.like)
+    let check: [string, like] | undefined = Object.entries(allLikes).find(([_, like]) => like.post_id == id && like.user_id == session.id)
     if (check) {
         const [like_id, like_check] = check
         Delete("likes", like_id)
-        decrement("posts", "dislikes", { id_name: "post_id", id: like_check.post_id })
+        decrement("posts", like_check.like ? "likes" : "dislikes", { id_name: "post_id", id: like_check.post_id })
         delete allLikes[like_id]
         res.end(JSON.stringify({
             message: "Unliked"

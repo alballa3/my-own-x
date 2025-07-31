@@ -2,8 +2,7 @@ import http from "http"
 
 import { GetSession, isAuth } from "../auth/session"
 import { UserInDB } from "../../types/auth"
-import { parse } from "url";
-import { getRequestBody, JsonParse } from "../../lib/http";
+import { getRequestBody } from "../../lib/http";
 import { decrement, FindAll, FindBy, increment, Store, StoreUnique } from "../../lib/db";
 import { like } from "../../types/posts";
 
@@ -46,10 +45,10 @@ export default async function Like(req: http.IncomingMessage, res: http.ServerRe
         return;
     }
     let allLikes = FindAll("likes") as unknown as like
-    let check: [string, like] | undefined = Object.entries(allLikes).find(([_, like]) => like.post_id == id && like.user_id == session.id && like.like)
+    let check: [string, like] | undefined = Object.entries(allLikes).find(([_, like]) => like.post_id == id && like.user_id == session.id)
     if (check) {
         const [like_id, like_check] = check
-        decrement("posts", "likes", { id_name: "post_id", id: like_check.post_id })
+        decrement("posts", like_check.like ? "likes" : "dislikes", { id_name: "post_id", id: like_check.post_id })
         delete allLikes[like_id]
         res.end(JSON.stringify({
             message: "Unliked"

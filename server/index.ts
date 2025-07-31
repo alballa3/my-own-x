@@ -2,6 +2,7 @@ import http from "http";
 import { route } from "./route";
 import { existsSync, readFileSync, writeFileSync } from 'fs';
 import { RecordDB } from "../types/db";
+import { rate } from "./rateLimit";
 const db_path = "./data.json"
 
 export let db: RecordDB = {};
@@ -12,7 +13,7 @@ if (existsSync(db_path)) {
     db = json
   } catch (error) {
     console.log(error)
-    db={}
+    db = {}
   }
 }
 
@@ -22,10 +23,17 @@ const server = http.createServer((req, res) => {
   const handler = route.find((route) => {
     return route.path === url.pathname && route.method === method;
   });
+
   res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
   res.setHeader("Access-Control-Allow-Credentials", "true");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
   res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+  try {
+    res.statusCode = 429
+    rate(req)
+  } catch (error) {
+    res.end(JSON.stringify({ error: error.essage || "Too many request" }))
+  }
   if (handler) {
     handler.handler(req, res);
   } else {
