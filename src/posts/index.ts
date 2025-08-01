@@ -1,5 +1,10 @@
 import { createPost, type IPost } from "../lib/post";
-
+interface Pagination {
+    page: Number,
+    limit: Number,
+    totalPages: Number,
+    posts: IPost[]
+}
 (async () => {
     // Post creation functionality
     const postContent = document.getElementById('postContent') as HTMLTextAreaElement | null;
@@ -19,20 +24,16 @@ import { createPost, type IPost } from "../lib/post";
             'Content-Type': 'application/json',
         },
     });
-    const json = await reponse.json() as IPost[]
-    if (Array.isArray(json)) {
-        json.forEach((data) => {
-            let html = createPost(data);
-            if (postsFeed) {
-                postsFeed.insertAdjacentHTML('afterbegin', html);
-            }
-        }); // render each post
-    } else {
-        let html = createPost(json);
+    const json = await reponse.json() as Pagination
+    console.log(json);
+    json.posts.forEach((data) => {
+        console.log(data)
+        let html = createPost(data);
         if (postsFeed) {
             postsFeed.insertAdjacentHTML('afterbegin', html);
         }
-    }
+    }); // render each post
+
     // Handle post creation
     if (postButton && postContent) {
         postButton.addEventListener('click', async function () {
