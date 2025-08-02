@@ -28,3 +28,8 @@ export interface Profile {
   following_count: number;
   posts: IPost[];
 }
+export interface IFollows {
+  follower_id: string; // the user who is doing the following
+  following_id: string; // the user being followed
+  created_at: string;
+}

@@ -10,6 +10,7 @@ import Like from "./post/like";
 import ViewOne from "./post/single";
 import ViewAllPosts from "./post/view";
 import profilePublic from "./users/profile";
+import Follow from "./users/follow";
 
 export const route: Route[] = [
   {
@@ -21,56 +22,60 @@ export const route: Route[] = [
     path: "/auth/login",
     method: "POST",
     handler: Login,
-
   },
   {
     path: "/auth/session",
     method: "GET",
-    handler: getUser
+    handler: getUser,
   },
   {
     path: "/auth/profile",
     method: "GET",
-    handler: profile
+    handler: profile,
   },
   {
     path: "/auth/logout",
     method: "POST",
-    handler: logout
+    handler: logout,
   },
   {
     path: "/post/create",
     method: "POST",
-    handler: createPost
+    handler: createPost,
   },
   {
     path: "/post/all",
     method: "GET",
-    handler: ViewAllPosts
+    handler: ViewAllPosts,
   },
   {
     path: "/post/like",
     method: "POST",
-    handler: Like
+    handler: Like,
   },
   {
     path: "/post/dislike",
     method: "POST",
-    handler: Dislike
+    handler: Dislike,
   },
   {
     path: "/post/view",
     method: "GET",
-    handler: ViewOne
+    handler: ViewOne,
   },
   {
     path: "/post/comment",
     method: "POST",
-    handler: createComment
+    handler: createComment,
   },
   {
-    path:"/user/profile",
+    path: "/user/profile",
     method: "GET",
-    handler: profilePublic
-  }
+    handler: profilePublic,
+  },
+  {
+    path: "/user/follow",
+    method: "POST",
+    handler: Follow,
+  },
 ];
