@@ -1,6 +1,6 @@
 import relativeTime from "dayjs/plugin/relativeTime";
 import dayjs from "dayjs";
-import { createPost, escapeHtml, type IPost } from "./lib/post";
+import { createPost, escapeHtml, type IPost } from "../lib/post";
 dayjs.extend(relativeTime);
 // Types
 interface User {
@@ -13,9 +13,10 @@ interface User {
   following_count: number;
 }
 export interface Profile {
-  user_id: string;
+  id: string;
   name: string;
   is_user: boolean;
+  is_following: boolean;
   bio?: string;
   created_at: string;
   posts_count: number;
@@ -83,7 +84,7 @@ async function loadProfile(): Promise<void> {
 
     let profile = await getProfile();
     profileUser = {
-      id: profile.user_id,
+      id: profile.id,
       name: profile.name,
       bio: profile.bio,
       created_at: profile.created_at,
@@ -111,8 +112,8 @@ async function loadProfile(): Promise<void> {
 
 // Render profile information
 function renderProfile(): void {
+  console.log(profileUser);
   if (!profileContainer || !profileUser) return;
-
   const safeUsername = escapeHtml(profileUser.name);
   const safeBio = escapeHtml(profileUser.bio || "");
   const userInitial = safeUsername.charAt(0).toUpperCase();
@@ -135,11 +136,9 @@ function renderProfile(): void {
         
         <!-- Action Buttons -->
         <div class="flex justify-end pt-4 space-x-3">
-          ${
-            !isOwnProfile && currentUser
-              ? `
-            <button 
+              <button 
               id="follow-btn"
+              user-id="${profileUser.id}"
               class="px-4 py-2 ${
                 isFollowing
                   ? "bg-gray-600 hover:bg-gray-700"
@@ -148,27 +147,7 @@ function renderProfile(): void {
             >
               ${isFollowing ? "Following" : "Follow"}
             </button>
-          `
-              : ""
-          }
-          ${
-            isOwnProfile
-              ? `
-            <button class="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-full font-medium transition-colors edit-profile-btn">
-              Edit Profile
-            </button>
-          `
-              : ""
-          }
-          ${
-            !currentUser
-              ? `
-            <button class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-full font-medium transition-colors" ">
-              Sign in to Follow
-            </button>
-          `
-              : ""
-          }
+         
         </div>
         
         <!-- User Info -->

@@ -19,6 +19,8 @@ export interface UserInDB extends IUser {
 export type UserCollection = Record<string, IUser>;
 
 export interface Profile {
+  id:string
+  is_following: boolean;
   name: string;
   bio?: string;
   created_at: string;

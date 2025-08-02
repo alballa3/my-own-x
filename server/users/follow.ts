@@ -45,6 +45,15 @@ export default async function Follow(
     );
     return;
   }
+  if (session.id == id) {
+    res.statusCode = 400;
+    res.end(
+      JSON.stringify({
+        error: "You cant follow yourself",
+      })
+    );
+    return;
+  }
   let follows = FindBy(
     "follows",
     "follower_id",
@@ -58,7 +67,7 @@ export default async function Follow(
         allFollow[follow].following_id === id ||
         allFollow[follow].follower_id == session.id
       ) {
-        res.statusCode = 400;
+        res.statusCode = 208;
         res.end(JSON.stringify({ message: "NOT FOLLOWED" }));
         delete allFollow[follow];
       }

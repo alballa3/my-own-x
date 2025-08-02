@@ -60,14 +60,19 @@ export default async function profilePublic(
       },
     };
   });
+  const followers = FindBy("follows", "follower_id", id, false)
+  const following = FindBy("follows", "following_id", id, false)
+
   let profile: Profile = {
+    id: user.id,
     name: user.name,
     bio: user.bio,
     is_user: session.id === user.id,
     created_at: user.created_at.toString(),
     posts_count: posts.length,
-    followers_count: 0,
-    following_count: 0,
+    followers_count: followers?.length || 0,
+    following_count: following?.length || 0,
+    // is_following:
     posts: posts,
   };
   res.statusCode = 200;
