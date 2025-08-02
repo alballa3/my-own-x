@@ -9,6 +9,7 @@ import Dislike from "./post/dislike";
 import Like from "./post/like";
 import ViewOne from "./post/single";
 import ViewAllPosts from "./post/view";
+import profilePublic from "./users/profile";
 
 export const route: Route[] = [
   {
@@ -66,5 +67,10 @@ export const route: Route[] = [
     path: "/post/comment",
     method: "POST",
     handler: createComment
+  },
+  {
+    path:"/user/profile",
+    method: "GET",
+    handler: profilePublic
   }
 ];

@@ -1,29 +1,27 @@
 import http from "http";
-import { FindAll, FindBy } from "../../lib/db";
+import { Find, FindAll, FindBy } from "../../lib/db";
+import { Profile, UserInDB } from "../../types/auth";
 import { IPost, like } from "../../types/posts";
-import { UserInDB } from "../../types/auth";
 import { GetSession } from "../auth/session";
 
-export default function ViewAllPosts(
+export default async function profilePublic(
   req: http.IncomingMessage,
   res: http.ServerResponse
 ) {
-  const url = new URL(req.url as string, `http://${req.headers.host}`);
-  const limit = parseInt(url.searchParams.get("limit") || "10");
-  const page = parseInt(url.searchParams.get("page") || "1");
-
-  if (isNaN(limit) || isNaN(page) || limit <= 0 || page <= 0) {
+  const url = new URL(req.url!, `http://${req.headers.host}`);
+  const id = url.searchParams.get("id");
+  if (!id || isNaN(Number(id))) {
     res.statusCode = 400;
-    return res.end(JSON.stringify({ error: "Invalid limit or page" }));
+    res.end(JSON.stringify({ error: "PLAESE ENTER VAILD ID PLEASE" }));
+    return;
   }
-
-  const allPostsMap = FindAll("posts") as unknown as Record<string, IPost>;
-  const allPostsArray: IPost[] = Object.values(allPostsMap || {});
-  const total_pages = Math.ceil(allPostsArray.length / limit);
-  const start = (page - 1) * limit;
-  const end = start + limit;
-
-  const pagePosts = allPostsArray.slice(start, end);
+  const user = FindBy("users", "id", id, true) as unknown as UserInDB;
+  if (!user) {
+    res.statusCode = 400;
+    res.end(JSON.stringify({ error: "USER NOT FOUND" }));
+    return;
+  }
+  const pagePosts = FindBy("posts", "user_id", id, false) as unknown as IPost[];
   const session = GetSession(req) as UserInDB;
 
   const posts = pagePosts.map((post: IPost) => {
@@ -62,15 +60,16 @@ export default function ViewAllPosts(
       },
     };
   });
-
-  res.writeHead(200, { "Content-Type": "application/json" });
-  return res.end(
-    JSON.stringify({
-      page,
-      limit,
-      total_pages,
-      posts,
-      
-    })
-  );
+  let profile: Profile = {
+    name: user.name,
+    bio: user.bio,
+    is_user: session.id === user.id,
+    created_at: user.created_at.toString(),
+    posts_count: posts.length,
+    followers_count: 0,
+    following_count: 0,
+    posts: posts,
+  };
+  res.statusCode = 200;
+  res.end(JSON.stringify(profile));
 }

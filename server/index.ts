@@ -34,7 +34,7 @@ const server = http.createServer((req, res) => {
   } catch (error) {
     console.log(error)
     res.statusCode = 429
-    res.end(JSON.stringify({ error: error.essage || "Too many request" }))
+    res.end(JSON.stringify({ error: (error as Error).message || "Too many requests" }))
   }
   if (handler) {
     handler.handler(req, res);
