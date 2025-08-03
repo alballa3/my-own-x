@@ -1,6 +1,6 @@
 import http from "http";
 import { Find, FindAll, FindBy } from "../../lib/db";
-import { Profile, UserInDB } from "../../types/auth";
+import { IFollows, Profile, UserInDB } from "../../types/auth";
 import { IPost, like } from "../../types/posts";
 import { GetSession } from "../auth/session";
 
@@ -60,9 +60,10 @@ export default async function profilePublic(
       },
     };
   });
-  const followers = FindBy("follows", "follower_id", id, false)
-  const following = FindBy("follows", "following_id", id, false)
-
+  const allFollows = Object.values(FindAll("follows") || {}) as unknown as IFollows[];
+  const followers = allFollows.filter((f) => f.following_id === id);
+  const following = allFollows.filter((f) => f.follower_id === id);
+  const isFollowing = allFollows.some((f) => f.follower_id === session.id &&f.following_id == id);
   let profile: Profile = {
     id: user.id,
     name: user.name,
@@ -72,7 +73,7 @@ export default async function profilePublic(
     posts_count: posts.length,
     followers_count: followers?.length || 0,
     following_count: following?.length || 0,
-    // is_following:
+    is_following: isFollowing,
     posts: posts,
   };
   res.statusCode = 200;

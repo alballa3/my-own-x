@@ -83,10 +83,12 @@ async function loadProfile(): Promise<void> {
     hideError();
 
     let profile = await getProfile();
+    console.log(profile)
     profileUser = {
       id: profile.id,
       name: profile.name,
       bio: profile.bio,
+
       created_at: profile.created_at,
       posts_count: profile.posts_count,
       followers_count: profile.followers_count,
@@ -95,10 +97,7 @@ async function loadProfile(): Promise<void> {
     userPosts = profile.posts;
 
     // Random follow status if not own profile
-    isFollowing =
-      currentUser && currentUser.id !== profileUser.id
-        ? Math.random() > 0.5
-        : false;
+    isFollowing = profile.is_following
 
     renderProfile();
     renderPosts();
@@ -139,11 +138,10 @@ function renderProfile(): void {
               <button 
               id="follow-btn"
               user-id="${profileUser.id}"
-              class="px-4 py-2 ${
-                isFollowing
-                  ? "bg-gray-600 hover:bg-gray-700"
-                  : "bg-blue-500 hover:bg-blue-600"
-              } text-white rounded-full font-medium transition-colors"
+              class="px-4 py-2 ${isFollowing
+      ? "bg-gray-600 hover:bg-gray-700"
+      : "bg-blue-500 hover:bg-blue-600"
+    } text-white rounded-full font-medium transition-colors"
             >
               ${isFollowing ? "Following" : "Follow"}
             </button>
@@ -154,15 +152,14 @@ function renderProfile(): void {
         <div class="mt-4">
           <div class="flex items-center space-x-2 mb-2">
             <h1 class="text-xl font-bold text-white">${safeUsername}</h1>
-            ${
-              isOwnProfile
-                ? '<span class="px-2 py-1 bg-blue-500 text-white text-xs rounded-full">You</span>'
-                : ""
-            }
+            ${isOwnProfile
+      ? '<span class="px-2 py-1 bg-blue-500 text-white text-xs rounded-full">You</span>'
+      : ""
+    }
           </div>
           <p class="text-gray-400 mb-2">@${safeUsername
-            .toLowerCase()
-            .replace(/\s+/g, "")}</p>
+      .toLowerCase()
+      .replace(/\s+/g, "")}</p>
           <p class="text-gray-300 mb-3">${safeBio}</p>
           
           <!-- Join Date -->
@@ -174,21 +171,18 @@ function renderProfile(): void {
           <!-- Stats -->
           <div class="flex items-center space-x-4 text-sm">
             <div class="flex items-center space-x-1">
-              <span class="font-bold text-white following-count">${
-                profileUser.following_count
-              }</span>
+              <span class="font-bold text-white following-count">${profileUser.following_count
+    }</span>
               <span class="text-gray-400">Following</span>
             </div>
             <div class="flex items-center space-x-1">
-              <span class="font-bold text-white followers-count">${
-                profileUser.followers_count
-              }</span>
+              <span class="font-bold text-white followers-count">${profileUser.followers_count
+    }</span>
               <span class="text-gray-400">Followers</span>
             </div>
             <div class="flex items-center space-x-1">
-              <span class="font-bold text-white">${
-                profileUser.posts_count
-              }</span>
+              <span class="font-bold text-white">${profileUser.posts_count
+    }</span>
               <span class="text-gray-400">Posts</span>
             </div>
           </div>
